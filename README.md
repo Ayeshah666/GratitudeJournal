@@ -1,6 +1,6 @@
 # 🌸 Gratitude Journal - Electron App
 
-A cute desktop gratitude journal built using Electron.js 💖  
+A desktop gratitude journal built using Electron.js 💖  
 Write your thoughts, track moods, and reflect daily 🌈
 
 ## 🖥️ Demo
