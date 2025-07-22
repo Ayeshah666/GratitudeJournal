@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blissful Gratitude Journal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Delius+Swash+Caps&display=swap');
+        
+        body {
+            font-family: 'Comic Neue', cursive;
+            background-color: #fff9f0;
+        }
+        
+        .title-font {
+            font-family: 'Delius Swash Caps', cursive;
+        }
+        
+        .journal-page {
+            background: linear-gradient(to bottom right, #fff9f0 0%, #fff2d8 100%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .journal-page::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background: linear-gradient(to right, #ffb6c1, #ffd700, #87cefa, #98fb98, #dda0dd);
+            opacity: 0.3;
+        }
+        
+        .sticker {
+            position: absolute;
+            transition: transform 0.1s ease-out;
+            cursor: grab;
+            filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.1));
+            max-width: 100px;
+            max-height: 100px;
+            will-change: transform;
+            touch-action: none;
+            user-select: none;
+        }
+        .sticker:active {
+            cursor: grabbing;
+            transition: none;
+        }
+        
+        .sticker:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .entry-textarea {
+            background-color: rgba(255,255,255,0.7);
+            border: 1px dashed #d1c7b7;
+            border-radius: 10px;
+        }
+        
+        .entry-textarea:focus {
+            outline: none;
+            border-color: #ffb6c1;
+            box-shadow: 0 0 0 3px rgba(255,182,193,0.2);
+        }
+        
+        .mood-selector input:checked + label {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
+        }
+        
+        .floating-stickers {
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .floating-stickers::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        .floating-stickers::-webkit-scrollbar-thumb {
+            background-color: #d1c7b7;
+            border-radius: 3px;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .delay-1 { animation-delay: 0.5s; }
+        .delay-2 { animation-delay: 1s; }
+        .delay-3 { animation-delay: 1.5s; }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4 sm:px-8 bg-[#fff9f0]">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-8 relative">
+            <h1 class="title-font text-4xl sm:text-5xl text-amber-900 mb-2">Blissful Gratitude</h1>
+            <p class="text-lg text-amber-800">A daily journal for thankful hearts</p>
+            
+            <!-- Floating decorative elements -->
+            <div class="sticker floating delay-1" style="top: -20px; left: 10%;">
+                <i class="fas fa-cloud text-blue-200 text-3xl"></i>
+            </div>
+            <div class="sticker floating delay-2" style="top: -10px; right: 15%;">
+                <i class="fas fa-star text-yellow-300 text-2xl"></i>
+            </div>
+            <div class="sticker floating delay-3" style="bottom: -10px; left: 20%;">
+                <i class="fas fa-heart text-pink-300 text-2xl"></i>
+            </div>
+        </header>
+        
+        <!-- Date Selector -->
+        <div class="flex justify-between items-center mb-6 bg-white/80 rounded-full px-6 py-3 shadow-sm">
+            <button class="text-amber-800 hover:text-amber-600 transition">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="text-center">
+                <h2 class="font-bold text-xl text-amber-900" id="current-date">Today, June 15, 2023</h2>
+                <p class="text-sm text-amber-700">A beautiful day to be grateful</p>
+            </div>
+            <button class="text-amber-800 hover:text-amber-600 transition">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        
+        <!-- Journal Page -->
+        <div class="journal-page p-6 sm:p-8 mb-8 relative">
+            <!-- Decorative corner elements -->
+            <div class="absolute top-2 left-2 w-8 h-8 border-t-2 border-l-2 border-amber-300 rounded-tl-lg"></div>
+            <div class="absolute top-2 right-2 w-8 h-8 border-t-2 border-r-2 border-amber-300 rounded-tr-lg"></div>
+            <div class="absolute bottom-2 left-2 w-8 h-8 border-b-2 border-l-2 border-amber-300 rounded-bl-lg"></div>
+            <div class="absolute bottom-2 right-2 w-8 h-8 border-b-2 border-r-2 border-amber-300 rounded-br-lg"></div>
+            
+            <!-- Mood Selector -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-amber-800 mb-3">How are you feeling today?</h3>
+                <div class="mood-selector flex justify-between px-4">
+                    <div class="text-center">
+                        <input type="radio" id="mood-1" name="mood" class="hidden" checked>
+                        <label for="mood-1" class="cursor-pointer transition">
+                            <i class="fas fa-grin-stars text-3xl text-yellow-400"></i>
+                            <p class="text-xs mt-1">Joyful</p>
+                        </label>
+                    </div>
+                    <div class="text-center">
+                        <input type="radio" id="mood-2" name="mood" class="hidden">
+                        <label for="mood-2" class="cursor-pointer transition">
+                            <i class="fas fa-smile-beam text-3xl text-green-400"></i>
+                            <p class="text-xs mt-1">Happy</p>
+                        </label>
+                    </div>
+                    <div class="text-center">
+                        <input type="radio" id="mood-3" name="mood" class="hidden">
+                        <label for="mood-3" class="cursor-pointer transition">
+                            <i class="fas fa-meh text-3xl text-blue-400"></i>
+                            <p class="text-xs mt-1">Neutral</p>
+                        </label>
+                    </div>
+                    <div class="text-center">
+                        <input type="radio" id="mood-4" name="mood" class="hidden">
+                        <label for="mood-4" class="cursor-pointer transition">
+                            <i class="fas fa-frown text-3xl text-purple-400"></i>
+                            <p class="text-xs mt-1">Sad</p>
+                        </label>
+                    </div>
+                    <div class="text-center">
+                        <input type="radio" id="mood-5" name="mood" class="hidden">
+                        <label for="mood-5" class="cursor-pointer transition">
+                            <i class="fas fa-angry text-3xl text-red-400"></i>
+                            <p class="text-xs mt-1">Angry</p>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gratitude Prompts -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-amber-800 mb-3">Today I'm grateful for...</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+                    <div class="bg-white/70 rounded-lg p-3 border border-amber-100 flex items-center">
+                        <div class="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-heart text-yellow-400 text-sm"></i>
+                        </div>
+                        <input type="text" placeholder="Person" class="bg-transparent w-full focus:outline-none text-sm placeholder-amber-300">
+                    </div>
+                    <div class="bg-white/70 rounded-lg p-3 border border-amber-100 flex items-center">
+                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-utensils text-blue-400 text-sm"></i>
+                        </div>
+                        <input type="text" placeholder="Thing" class="bg-transparent w-full focus:outline-none text-sm placeholder-amber-300">
+                    </div>
+                    <div class="bg-white/70 rounded-lg p-3 border border-amber-100 flex items-center">
+                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-magic text-green-400 text-sm"></i>
+                        </div>
+                        <input type="text" placeholder="Experience" class="bg-transparent w-full focus:outline-none text-sm placeholder-amber-300">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Journal Entry -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold text-amber-800 mb-3">Reflections</h3>
+                <textarea class="entry-textarea w-full p-4 text-amber-900 placeholder-amber-300 focus:placeholder-amber-200" rows="8" placeholder="Write about something wonderful that happened today, or simply reflect on what makes you feel grateful..."></textarea>
+            </div>
+            
+            <!-- Photo/Sticker Area -->
+            <div class="bg-white/50 rounded-lg p-4 border border-dashed border-amber-200 min-h-32 mb-6 relative" id="sticker-canvas">
+                <p class="text-sm text-amber-500 text-center">Add photos or stickers here!</p>
+                
+                <!-- Sample stickers that have been added -->
+                <div class="sticker" style="top: 20px; left: 30px;">
+                    <i class="fas fa-sun text-yellow-300 text-4xl"></i>
+                </div>
+                <div class="sticker" style="top: 40px; right: 30px;">
+                    <i class="fas fa-ice-cream text-pink-300 text-3xl"></i>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row justify-between gap-3">
+                <button id="add-photo-btn" class="bg-amber-100 hover:bg-amber-200 text-amber-800 px-6 py-2 rounded-full transition flex items-center justify-center">
+                    <i class="fas fa-camera mr-2"></i> Add Photo
+                </button>
+                <button id="save-entry-btn" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-full transition flex items-center justify-center">
+                    <i class="fas fa-save mr-2"></i> Save Entry
+                </button>
+            </div>
+        </div>
+        
+        <!-- Sticker Palette -->
+        <div class="floating-stickers p-4 mb-8 overflow-x-auto">
+            <h3 class="text-lg font-semibold text-amber-800 mb-3">Sticker Collection</h3>
+            <div class="flex gap-4 w-max">
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-heart">
+                    <i class="fas fa-heart text-pink-400 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-star">
+                    <i class="fas fa-star text-yellow-400 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-cloud">
+                    <i class="fas fa-cloud text-blue-300 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-dog">
+                    <i class="fas fa-dog text-brown-400 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-cookie">
+                    <i class="fas fa-cookie text-amber-600 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-mug-hot">
+                    <i class="fas fa-mug-hot text-brown-300 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-book">
+                    <i class="fas fa-book text-purple-400 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-music">
+                    <i class="fas fa-music text-red-400 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-umbrella-beach">
+                    <i class="fas fa-umbrella-beach text-blue-400 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-leaf">
+                    <i class="fas fa-leaf text-green-500 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-cat">
+                    <i class="fas fa-cat text-gray-600 text-3xl"></i>
+                </div>
+                <div class="sticker-option cursor-pointer hover:transform hover:scale-110 transition" data-sticker="fa-ice-cream">
+                    <i class="fas fa-ice-cream text-pink-300 text-3xl"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quote of the Day -->
+        <div class="bg-white/80 rounded-xl p-6 text-center mb-8 relative overflow-hidden">
+            <div class="absolute -top-10 -left-10 w-20 h-20 bg-pink-200 rounded-full opacity-20"></div>
+            <div class="absolute -bottom-10 -right-10 w-24 h-24 bg-yellow-200 rounded-full opacity-20"></div>
+            <h3 class="title-font text-xl text-amber-800 mb-2">Quote to Inspire Gratitude</h3>
+            <p class="text-amber-900 italic mb-2">"Gratitude turns what we have into enough, and more. It turns denial into acceptance, chaos into order, confusion into clarity... it makes sense of our past, brings peace for today, and creates a vision for tomorrow."</p>
+            <p class="text-sm text-amber-700">— Melody Beattie</p>
+        </div>
+        
+        <!-- Hidden file input -->
+        <input type="file" id="photo-upload" accept="image/*" class="hidden">
+        
+        <!-- Footer -->
+        <footer class="text-center text-sm text-amber-700">
+            <p>Made with <i class="fas fa-heart text-pink-400"></i> for grateful hearts everywhere</p>
+            <p class="mt-1">Blissful Gratitude Journal © 2023</p>
+        </footer>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+</html>
