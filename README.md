@@ -4,7 +4,7 @@ A desktop gratitude journal built using Electron.js 💖
 Write your thoughts, track moods, and reflect daily 🌈
 
 ## 🖥️ Demo
-![Demo](demo.gif)
+https://ayeshah666.github.io/GratitudeJournal/
 
 ## 📦 Features
 - Write & save daily journal entries
